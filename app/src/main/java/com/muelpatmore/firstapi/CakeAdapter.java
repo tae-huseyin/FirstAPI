@@ -1,6 +1,8 @@
 package com.muelpatmore.firstapi;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,17 +11,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.muelpatmore.firstapi.util.constants.CakeModel;
+import com.squareup.picasso.Picasso;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class CakeAdapter extends RecyclerView.Adapter<CakeAdapter.MyViewHolder> {
 
-    private ArrayList<CakeModel> realmCustomers;
+    private ArrayList<CakeModel> cakeList;
     private int row_cake;
     private Context applicationContext;
 
-    public CakeAdapter(ArrayList<CakeModel> realmCustomers, int row_customer, Context applicationContext) {
-        this.realmCustomers = realmCustomers;
+    public CakeAdapter(ArrayList<CakeModel> cakeList, int row_customer, Context applicationContext) {
+        this.cakeList = cakeList;
         this.row_cake = row_customer;
         this.applicationContext = applicationContext;
     }
@@ -39,15 +44,15 @@ public class CakeAdapter extends RecyclerView.Adapter<CakeAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         // collect data from Realm item and plug into View
-        holder.tvTitle.setText(realmCustomers.get(position).getTitle().toString());
-        holder.tvDescription.setText(realmCustomers.get(position).getDesc().toString());
-
+        holder.tvTitle.setText(cakeList.get(position).getTitle());
+        holder.tvDescription.setText(cakeList.get(position).getDesc());
+        Picasso.with(holder.ivImage.getContext()).load(cakeList.get(position).getImage()).into(holder.ivImage);
         //holder.ivImage.setImageBitmap();
     }
 
     @Override
     public int getItemCount() {
-        return realmCustomers.size();
+        return cakeList.size();
     }
 
     // inits row elements
