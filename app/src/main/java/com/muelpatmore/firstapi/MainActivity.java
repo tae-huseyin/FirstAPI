@@ -2,8 +2,10 @@ package com.muelpatmore.firstapi;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.muelpatmore.firstapi.services.RequestInterface;
+import com.muelpatmore.firstapi.services.ServerConnection;
 import com.muelpatmore.firstapi.util.constants.CakeModel;
 
 import java.util.List;
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        requestInterface = ServerConnection.getServerConnection();
         requestInterface.getCakesList()
                 .observeOn(AndroidSchedulers.mainThread())
                         // ensure to reference plural Schedulers class
@@ -34,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(List<CakeModel> value) {
+                        for(CakeModel c: value) {
+                            Log.i("CakeList", c.getTitle());
+                        }
 
                     }
 
