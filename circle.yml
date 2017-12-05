@@ -41,6 +41,7 @@ dependencies:
         - if [ -f ./gradlew ]; then ./gradlew app:dependencies --console=plain --no-daemon;else gradle app:dependencies --console=plain --no-daemon;fi
         - chmod +x gradlew
         - ./gradlew dependencies
+        - ./gradlew app:dependencies
 
     cache_directories:
         # Android SDK
