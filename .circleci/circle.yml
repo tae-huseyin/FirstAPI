@@ -1,98 +1,16 @@
-machine:
-    java:
-        version: oraclejdk8
-    environment:
-        ANDROID_HOME: /usr/local/android-sdk-linux
-        ANDROID_BUILD_TOOLS: 26.0.2
-        APPLICATION_ID: com.muelpatmore.firstapi
-        FABRIC_API_KEY: 0000000000000000000000000000000000000000 
-        GOOGLE_MAPS_API_KEY: DUMMY_GOOGLE_MAPS_API_KEY
-        NEARIT_API_KEY: DUMMY_NEARIT_API_KEY
-        TWITTER_API_KEY: DUMMY_TWITTER_API_KEY
-        TWITTER_SECRET: DUMMY_TWITTER_SECRET
-
 dependencies:
-override:
-- echo y | android update sdk --no-ui --all --filter tools,platform-tools,build-tools-21.1.2,android-21,extra-google-m2repository,extra-google-google_play_services,extra-android-support
-- chmod +x gradlew
-- ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
-     - chmod +x gradlew
-    pre:
-        - echo y | android list sdk
-        - echo y | android update sdk --no-ui --all --filter "tools"
-        - echo y | android update sdk --no-ui --all --filter "platform-tools"
-        - echo y | android update sdk --no-ui --all --filter "build-tools-24.0.0"
-        - echo y | android update sdk --no-ui --all --filter "android-24"
-        - echo y | android update sdk --no-ui --all --filter "extra-google-m2repository"
-        - echo y | android update sdk --no-ui --all --filter "extra-google-google_play_services"
-        - echo y | android update sdk --no-ui --all --filter "extra-android-support"
-        - echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"
-
-        echo y | android update sdk --no-ui --all --filter "tool,extra-android-m2repository,extra-android-support,extra-google-google_play_services,extra-google-m2repository"
-        echo y | $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
-
-        # Remove any leftover lock from previous builds
-        - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-
-        # Make sure we have the sdkmanager available, and update the Android SDK tools if not
-        - if [ ! -e $ANDROID_HOME/tools/bin/sdkmanager ]; then echo y | android update sdk --no-ui --all --filter tools; fi
-        
-        # Pre-accept Android SDK components licenses
-        - mkdir "$ANDROID_HOME/licenses" || true
-        - echo -y "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-
-        # Install all the required SDK components
-        - $ANDROID_HOME/tools/bin/sdkmanager --verbose "platform-tools" "build-tools;"$ANDROID_BUILD_TOOLS "extras;google;m2repository"
-
-    #override:
-        # Force Gradle to pre-download dependencies for the app module (the default would only be for the root, which is useless)
-        #- if [ -f ./gradlew ]; then ./gradlew app:dependencies --console=plain --no-daemon;else gradle app:dependencies --console=plain --no-daemon;fi
-
-    cache_directories:
-        # Android SDK
-        - /usr/local/android-sdk-linux/tools
-        - /usr/local/android-sdk-linux/platform-tools
-        - /usr/local/android-sdk-linux/build-tools
-        - /usr/local/android-sdk-linux/licenses
-        - /usr/local/android-sdk-linux/extras/google/m2repository
-
-        # Gradle caches
-        - /home/ubuntu/.gradle/caches/
-        - /home/ubuntu/.gradle/wrapper/
-
-test:
-    pre:
-        # Create mock Play Services JSON
-        - ./team-props/scripts/ci-mock-google-services-setup.sh
-
-    override:
-        - ./gradlew check --no-daemon --console=plain --continue
-
-    post:
-        # Collect the JUnit reports
-        - mkdir -p $CIRCLE_TEST_REPORTS/reports/junit
-        - find app/build/test-results/ -name "*.xml" -exec cp {} $CIRCLE_TEST_REPORTS/reports/junit/ \;
-
-        # Collect the Android Lint reports
-        - mkdir -p $CIRCLE_TEST_REPORTS/reports/lint
-        - find app/build/reports -name "lint*.html" -exec cp {} $CIRCLE_TEST_REPORTS/reports/lint/ \;
-        - find app/build/reports -name "lint*.xml" -exec cp {} $CIRCLE_TEST_REPORTS/reports/lint/ \;
-
-        # Collect the Checkstyle reports
-        - mkdir -p $CIRCLE_TEST_REPORTS/reports/checkstyle
-        - find app/build/reports/checkstyle -name "*.html" -exec cp {} $CIRCLE_TEST_REPORTS/reports/checkstyle/ \;
-        - find app/build/reports/checkstyle -name "*.xml" -exec cp {} $CIRCLE_TEST_REPORTS/reports/checkstyle/ \;
-
-        # Collect the Findbugs reports
-        - mkdir -p $CIRCLE_TEST_REPORTS/reports/findbugs
-        - find app/build/reports/findbugs -name "*.html" -exec cp {} $CIRCLE_TEST_REPORTS/reports/findbugs/ \;
-        - find app/build/reports/findbugs -name "*.xml" -exec cp {} $CIRCLE_TEST_REPORTS/reports/findbugs/ \;
-
-        # Collect the PMD reports
-        - mkdir -p $CIRCLE_TEST_REPORTS/reports/pmd
-        - find app/build/reports/pmd -name "*.html" -exec cp {} $CIRCLE_TEST_REPORTS/reports/pmd/ \;
-        - find app/build/reports/pmd -name "*.xml" -exec cp {} $CIRCLE_TEST_REPORTS/reports/pmd/ \;
-
-        # Collect the Detekt reports
-        - mkdir -p $CIRCLE_TEST_REPORTS/reports/detekt
-        - find app/build/reports/ -name "report.detekt" -exec cp {} $CIRCLE_TEST_REPORTS/reports/detekt/ \;
+  pre:
+    - unset ANDROID_NDK_HOME
+    # Android SDK Build-tools
+    - if [ ! -d "/usr/local/android-sdk-linux/build-tools/26.0.1" ]; then echo y | android update sdk --no-ui --all --filter "build-tools-26.0.1"; fi
+    # Android SDK Platform 26
+    - if [ ! -d "/usr/local/android-sdk-linux/platforms/android-26" ]; then echo y | android update sdk --no-ui --all --filter "android-26"; fi
+    # brings in appcompat
+    - if [ ! -d "/usr/local/android-sdk-linux/extras/android/m2repository" ]; then echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"; fi
+    - mkdir -p /usr/local/android-sdk-linux/licenses
+    - aws s3 cp s3://launchdarkly-pastebin/ci/android/licenses/android-sdk-license /usr/local/android-sdk-linux/licenses/android-sdk-license
+    - aws s3 cp s3://launchdarkly-pastebin/ci/android/licenses/intel-android-extra-license /usr/local/android-sdk-linux/licenses/intel-android-extra-license
+  cache_directories:
+    - /usr/local/android-sdk-linux/platforms/android-26
+    - /usr/local/android-sdk-linux/build-tools/26.0.1
+    - /usr/local/android-sdk-linux/extras/android/m2repository
