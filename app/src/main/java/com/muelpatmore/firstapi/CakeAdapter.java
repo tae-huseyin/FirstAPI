@@ -9,13 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.muelpatmore.firstapi.data.network.constants.constant.CakeModel;
-import com.squareup.picasso.Picasso;
+import com.muelpatmore.firstapi.data.network.constants.model.CakeModel;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 

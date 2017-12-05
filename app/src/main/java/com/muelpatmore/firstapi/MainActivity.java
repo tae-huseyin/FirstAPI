@@ -6,16 +6,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
-import com.muelpatmore.firstapi.data.AppDataManager;
-import com.muelpatmore.firstapi.data.network.constants.services.RequestInterface;
-import com.muelpatmore.firstapi.data.network.constants.services.ServerConnection;
-import com.muelpatmore.firstapi.data.network.constants.constant.CakeModel;
+import com.muelpatmore.firstapi.data.network.constants.model.CakeModel;
 import com.muelpatmore.firstapi.injection.components.ActivityComponent;
 import com.muelpatmore.firstapi.injection.components.DaggerActivityComponent;
 import com.muelpatmore.firstapi.injection.modules.ActivityModule;
 import com.muelpatmore.firstapi.views.cakelist.CakeListPresenter;
 import com.muelpatmore.firstapi.views.cakelist.ICakeListMvpView;
-import com.muelpatmore.firstapi.views.ui.utils.rx.AppSchedulerProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +20,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 
 //appdatamanager @inject
@@ -40,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements ICakeListMvpView{
 
     //private ArrayList<CakeModel> mCakeList;
     //private RecyclerView recyclerView;
-    //cant inject private in dagger
     @Inject
     CakeListPresenter<MainActivity> cakeListPresenter;
 

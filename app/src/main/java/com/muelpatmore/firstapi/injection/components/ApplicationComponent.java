@@ -5,7 +5,9 @@ import android.content.Context;
 
 import com.muelpatmore.firstapi.MyApp;
 import com.muelpatmore.firstapi.data.IDataManager;
+import com.muelpatmore.firstapi.data.network.constants.ApiHelper;
 import com.muelpatmore.firstapi.injection.modules.ApplicationModule;
+import com.muelpatmore.firstapi.injection.modules.NetworkModule;
 import com.muelpatmore.firstapi.injection.scope.ApplicationContext;
 
 import javax.inject.Singleton;
@@ -17,7 +19,7 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = ApplicationModule.class)
+@Component(modules = {ApplicationModule.class, NetworkModule.class})
 public interface ApplicationComponent {
     void inject(MyApp myApp);
 
@@ -27,4 +29,7 @@ public interface ApplicationComponent {
     Application application();
 
     IDataManager getDataManager();
+
+    //void inject(ServerConnection serverConnection);
+    ApiHelper getApiHelper();
 }

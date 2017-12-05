@@ -2,7 +2,6 @@ package com.muelpatmore.firstapi.injection.components;
 
 import com.muelpatmore.firstapi.MainActivity;
 import com.muelpatmore.firstapi.injection.modules.ActivityModule;
-import com.muelpatmore.firstapi.injection.scope.ActivityContext;
 import com.muelpatmore.firstapi.injection.scope.PerActivity;
 
 import dagger.Component;
