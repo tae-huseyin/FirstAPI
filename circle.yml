@@ -26,6 +26,16 @@ dependencies:
         # Install all the required SDK components
         - echo y | $ANDROID_HOME/tools/bin/sdkmanager --verbose "platform-tools" "build-tools;"$ANDROID_BUILD_TOOLS "extras;google;m2repository"
         - echo y | android update sdk --no-ui --all --filter build-tools-26.0.2
+
+        - echo y | android -s update sdk -u -a -t "tools" # update Android SDK that includes sdkmanager(1)
+        - mkdir -p $ANDROID_HOME/licenses
+        - echo -e "8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
+        - echo -e "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
+        - $ANDROID_HOME/tools/bin/sdkmanager "platform-tools" "extras;android;m2repository" "extras;google;m2repository"
+        - $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.1"
+        - $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.1"
+
+
     override:
         # Force Gradle to pre-download dependencies for the app module (the default would only be for the root, which is useless)
         - if [ -f ./gradlew ]; then ./gradlew app:dependencies --console=plain --no-daemon;else gradle app:dependencies --console=plain --no-daemon;fi
