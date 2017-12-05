@@ -19,7 +19,7 @@ dependencies:
     pre:
       - sudo add-apt-repository ppa:cwchien/gradle -y
       - sudo apt-get update
-      - sudo apt-get install gradle-2.6
+      - sudo apt-get install gradle-3.0.0
         # Remove any leftover lock from previous builds
         - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 
@@ -47,7 +47,7 @@ dependencies:
         # Force Gradle to pre-download dependencies for the app module (the default would only be for the root, which is useless)
         - if [ -f ./gradlew ]; then ./gradlew app:dependencies --console=plain --no-daemon;else gradle app:dependencies --console=plain --no-daemon;fi
         - chmod +x gradlew
-        - ./gradlew dependencies
+        - ./gradlew dependencies --console=plain
 
     cache_directories:
         # Android SDK
