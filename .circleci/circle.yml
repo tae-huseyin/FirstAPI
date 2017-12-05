@@ -11,6 +11,10 @@ machine:
         TWITTER_API_KEY: DUMMY_TWITTER_API_KEY
         TWITTER_SECRET: DUMMY_TWITTER_SECRET
 
+- run:
+      name: chmod permissions
+      command: chmod +x ./gradlew
+
 dependencies:
     pre:
       - sudo add-apt-repository ppa:cwchien/gradle -y
