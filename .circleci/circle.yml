@@ -3,8 +3,8 @@ machine:
         version: oraclejdk8
     environment:
         ANDROID_HOME: /usr/local/android-sdk-linux
-        ANDROID_BUILD_TOOLS: 26.0.2
-        APPLICATION_ID: com.muelpatmore.firstapi
+        ANDROID_BUILD_TOOLS: 25.0.3
+        APPLICATION_ID: com.abhiandroid.asynctasksexample
         FABRIC_API_KEY: 0000000000000000000000000000000000000000 
         GOOGLE_MAPS_API_KEY: DUMMY_GOOGLE_MAPS_API_KEY
         NEARIT_API_KEY: DUMMY_NEARIT_API_KEY
@@ -25,9 +25,10 @@ dependencies:
 
         # Install all the required SDK components
         - echo y | $ANDROID_HOME/tools/bin/sdkmanager --verbose "platform-tools" "build-tools;"$ANDROID_BUILD_TOOLS "extras;google;m2repository"
-        - echo y | android update sdk --no-ui --all --filter build-tools-26.0.2
+        - echo y | android update sdk --no-ui --all --filter build-tools-25.0.3
     override:
-        - chmod +x gradlew
+        # Force Gradle to pre-download dependencies for the app module (the default would only be for the root, which is useless)
+        - if [ -f ./gradlew ]; then ./gradlew app:dependencies --console=plain --no-daemon;else gradle app:dependencies --console=plain --no-daemon;fi
 
     cache_directories:
         # Android SDK
