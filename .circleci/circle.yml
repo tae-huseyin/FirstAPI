@@ -12,6 +12,8 @@ machine:
         TWITTER_SECRET: DUMMY_TWITTER_SECRET
 
 dependencies:
+override:
+     - chmod +x gradlew
     pre:
         - echo y | android list sdk
         - echo y | android update sdk --no-ui --all --filter "tools"
