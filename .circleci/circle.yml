@@ -13,6 +13,9 @@ machine:
 
 dependencies:
     pre:
+      - sudo add-apt-repository ppa:cwchien/gradle -y
+      - sudo apt-get update
+      - sudo apt-get install gradle-2.6
         # Remove any leftover lock from previous builds
         - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 
@@ -29,8 +32,8 @@ dependencies:
 
         - echo y | android -s update sdk -u -a -t "tools" # update Android SDK that includes sdkmanager(1)
         - mkdir -p $ANDROID_HOME/licenses
-        - echo -e "8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
-        - echo -e "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
+        - echo -y "8933bad161af4178b1185d1a37fbf41ea5269c55" > $ANDROID_HOME/licenses/android-sdk-license
+        - echo -y "84831b9409646a918e30573bab4c9c91346d8abd" > $ANDROID_HOME/licenses/android-sdk-preview-license
         - $ANDROID_HOME/tools/bin/sdkmanager "platform-tools" "extras;android;m2repository" "extras;google;m2repository"
         - $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.1"
         - $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.1"
